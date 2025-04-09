@@ -4,8 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PrivacyMeter from '@/components/dashboard/PrivacyMeter';
-import { privacyData, privacyScore } from '@/data/mockData';
-import { Shield, AlertTriangle, Lock, Eye } from 'lucide-react';
+import PrivacyTimeline from '@/components/dashboard/PrivacyTimeline';
+import { privacyData, privacyScore, privacyTimelineData } from '@/data/mockData';
+import { Shield, AlertTriangle, Lock, Eye, Clock } from 'lucide-react';
 
 export default function Privacy() {
   return (
@@ -25,6 +26,7 @@ export default function Privacy() {
       <Tabs defaultValue="overview" className="mb-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="permissions">App Permissions</TabsTrigger>
           <TabsTrigger value="data">Data Access</TabsTrigger>
           <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
@@ -96,6 +98,10 @@ export default function Privacy() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+        
+        <TabsContent value="timeline" className="mt-4">
+          <PrivacyTimeline data={privacyTimelineData} currentScore={privacyScore.score} />
         </TabsContent>
         
         <TabsContent value="permissions">

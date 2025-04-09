@@ -210,6 +210,135 @@ export const privacyScore: PrivacyScore = {
   appsWithHighAccess: 8
 };
 
+// Privacy timeline data structure
+export interface PrivacyTimelineEntry {
+  id: number;
+  date: Date;
+  score: number; 
+  riskLevel: 'low' | 'medium' | 'high';
+  significantEvents: {
+    type: 'app_install' | 'permission_change' | 'data_breach' | 'privacy_audit' | 'setting_change';
+    description: string;
+    impact: number; // Positive or negative impact on privacy score
+  }[];
+  dataShared: {
+    category: string;
+    amount: number; // Percentage or some metric
+  }[];
+}
+
+// Historical privacy timeline data
+export const privacyTimelineData: PrivacyTimelineEntry[] = [
+  {
+    id: 1,
+    date: new Date('2023-01-01'),
+    score: 78,
+    riskLevel: 'low',
+    significantEvents: [
+      {
+        type: 'privacy_audit',
+        description: 'Initial privacy audit performed',
+        impact: 5
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 25 },
+      { category: 'Contacts', amount: 15 },
+      { category: 'Media', amount: 10 }
+    ]
+  },
+  {
+    id: 2,
+    date: new Date('2023-02-01'),
+    score: 72,
+    riskLevel: 'low',
+    significantEvents: [
+      {
+        type: 'app_install',
+        description: 'Installed social media app with high data access',
+        impact: -6
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 28 },
+      { category: 'Contacts', amount: 22 },
+      { category: 'Media', amount: 15 }
+    ]
+  },
+  {
+    id: 3,
+    date: new Date('2023-03-01'),
+    score: 68,
+    riskLevel: 'medium',
+    significantEvents: [
+      {
+        type: 'permission_change',
+        description: 'Increased permissions for 3 apps',
+        impact: -4
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 35 },
+      { category: 'Contacts', amount: 30 },
+      { category: 'Media', amount: 20 }
+    ]
+  },
+  {
+    id: 4,
+    date: new Date('2023-04-01'),
+    score: 70,
+    riskLevel: 'medium',
+    significantEvents: [
+      {
+        type: 'setting_change',
+        description: 'Enabled stricter privacy settings',
+        impact: 2
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 32 },
+      { category: 'Contacts', amount: 28 },
+      { category: 'Media', amount: 18 }
+    ]
+  },
+  {
+    id: 5,
+    date: new Date('2023-05-01'),
+    score: 62,
+    riskLevel: 'medium',
+    significantEvents: [
+      {
+        type: 'data_breach',
+        description: 'Minor data breach detected from a third-party app',
+        impact: -8
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 38 },
+      { category: 'Contacts', amount: 35 },
+      { category: 'Media', amount: 25 }
+    ]
+  },
+  {
+    id: 6,
+    date: new Date('2023-06-01'),
+    score: 65,
+    riskLevel: 'medium',
+    significantEvents: [
+      {
+        type: 'privacy_audit',
+        description: 'Monthly privacy review performed',
+        impact: 3
+      }
+    ],
+    dataShared: [
+      { category: 'Location', amount: 36 },
+      { category: 'Contacts', amount: 32 },
+      { category: 'Media', amount: 22 }
+    ]
+  }
+];
+
 // Goals data
 export const goalsData: Goal[] = [
   {
