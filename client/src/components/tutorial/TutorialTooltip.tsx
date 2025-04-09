@@ -94,12 +94,18 @@ export function TutorialTooltip() {
     // Small delay to ensure DOM has updated
     const timer = setTimeout(calculatePosition, 100);
 
-    // Recalculate on window resize
+    // Recalculate on window resize or scroll
     window.addEventListener('resize', calculatePosition);
+    window.addEventListener('scroll', calculatePosition);
+    
+    // Also recalculate if the orientation changes (mobile devices)
+    window.addEventListener('orientationchange', calculatePosition);
 
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', calculatePosition);
+      window.removeEventListener('scroll', calculatePosition);
+      window.removeEventListener('orientationchange', calculatePosition);
     };
   }, [isActive, currentStep]);
 
@@ -118,7 +124,7 @@ export function TutorialTooltip() {
         style={{
           position: 'fixed',
           ...position,
-          zIndex: 9999,
+          zIndex: 10000,
           width: 300,
           transform: `translate(${position.x || 0}px, ${position.y || 0}px)`
         }}

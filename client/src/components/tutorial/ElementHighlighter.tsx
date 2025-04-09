@@ -35,17 +35,32 @@ export function ElementHighlighter() {
         height: rect.height
       });
       setIsVisible(true);
+      
+      // Scroll into view if element is not visible in viewport
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const isInViewport = 
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= viewportHeight &&
+        rect.right <= viewportWidth;
+        
+      if (!isInViewport) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     };
 
     // Small delay to ensure DOM has updated
     const timer = setTimeout(calculatePosition, 100);
 
-    // Recalculate on window resize
+    // Recalculate on window resize or scroll
     window.addEventListener('resize', calculatePosition);
+    window.addEventListener('scroll', calculatePosition);
 
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', calculatePosition);
+      window.removeEventListener('scroll', calculatePosition);
     };
   }, [isActive, currentStep]);
 
@@ -57,7 +72,7 @@ export function ElementHighlighter() {
     <>
       {/* Overlay that dims the entire screen except the target element */}
       <div
-        className="fixed inset-0 bg-black/40 z-50 pointer-events-none"
+        className="fixed inset-0 bg-black/40 z-[9000] pointer-events-none"
         style={{
           clipPath: `path('M 0,0 L 0,${window.innerHeight} L ${window.innerWidth},${window.innerHeight} L ${window.innerWidth},0 L 0,0 Z M ${position.left},${position.top} L ${position.left + position.width},${position.top} L ${position.left + position.width},${position.top + position.height} L ${position.left},${position.top + position.height} Z')`
         }}
@@ -76,7 +91,7 @@ export function ElementHighlighter() {
             left: position.left - 4,
             width: position.width + 8,
             height: position.height + 8,
-            zIndex: 51,
+            zIndex: 9001,
             pointerEvents: 'none',
             borderRadius: '6px'
           }}
