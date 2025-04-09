@@ -13,6 +13,7 @@ import DigitalFootprint from "@/pages/DigitalFootprint";
 import AdPredictions from "@/pages/AdPredictions";
 import Privacy from "@/pages/Privacy";
 import Goals from "@/pages/Goals";
+import Integrations from "@/pages/Integrations";
 import Settings from "@/pages/Settings";
 import AuthPage from "@/pages/auth-page";
 
@@ -24,6 +25,7 @@ function Router() {
       <ProtectedRoute path="/ad-predictions" component={AdPredictions} />
       <ProtectedRoute path="/privacy" component={Privacy} />
       <ProtectedRoute path="/goals" component={Goals} />
+      <ProtectedRoute path="/integrations" component={Integrations} />
       <ProtectedRoute path="/settings" component={Settings} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />

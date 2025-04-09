@@ -304,7 +304,7 @@ export default function PlatformIntegration() {
                             id={`contacts-${platform.id}`}
                             checked={platform.permissions.contacts}
                             onCheckedChange={() => togglePermission(platform.id, 'contacts')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -315,7 +315,7 @@ export default function PlatformIntegration() {
                             id={`content-${platform.id}`}
                             checked={platform.permissions.content}
                             onCheckedChange={() => togglePermission(platform.id, 'content')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -326,7 +326,7 @@ export default function PlatformIntegration() {
                             id={`location-${platform.id}`}
                             checked={platform.permissions.location}
                             onCheckedChange={() => togglePermission(platform.id, 'location')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                       </div>
@@ -369,7 +369,7 @@ export default function PlatformIntegration() {
                             id={`activity-c-${platform.id}`}
                             checked={platform.permissions.activity}
                             onCheckedChange={() => togglePermission(platform.id, 'activity')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -380,7 +380,7 @@ export default function PlatformIntegration() {
                             id={`contacts-c-${platform.id}`}
                             checked={platform.permissions.contacts}
                             onCheckedChange={() => togglePermission(platform.id, 'contacts')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -391,7 +391,7 @@ export default function PlatformIntegration() {
                             id={`content-c-${platform.id}`}
                             checked={platform.permissions.content}
                             onCheckedChange={() => togglePermission(platform.id, 'content')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -402,7 +402,7 @@ export default function PlatformIntegration() {
                             id={`location-c-${platform.id}`}
                             checked={platform.permissions.location}
                             onCheckedChange={() => togglePermission(platform.id, 'location')}
-                            size="sm"
+                            className="scale-75"
                           />
                         </div>
                       </div>

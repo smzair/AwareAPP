@@ -9,7 +9,8 @@ import {
   Settings,
   HelpCircle,
   Zap,
-  User
+  User,
+  Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
@@ -20,6 +21,7 @@ const navItems = [
   { path: '/ad-predictions', label: 'Ad Predictions', icon: <PuzzleIcon className="h-6 w-6" /> },
   { path: '/privacy', label: 'Privacy', icon: <ShieldCheck className="h-6 w-6" /> },
   { path: '/goals', label: 'Goals', icon: <ClipboardCheck className="h-6 w-6" /> },
+  { path: '/integrations', label: 'Platform Integrations', icon: <Layers className="h-6 w-6" /> },
   { path: '/settings', label: 'Settings', icon: <Settings className="h-6 w-6" /> },
 ];
 
