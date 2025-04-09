@@ -7,6 +7,7 @@ import AdPredictionCard from '@/components/dashboard/AdPredictionCard';
 import PrivacyMeter from '@/components/dashboard/PrivacyMeter';
 import GoalsList from '@/components/dashboard/GoalsList';
 import RecommendationsList from '@/components/dashboard/RecommendationsList';
+import { TutorialButton } from '@/components/tutorial';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { 
@@ -23,7 +24,7 @@ import {
 export default function Dashboard() {
   return (
     <MainLayout>
-      <div className="md:flex md:justify-between md:items-center mb-6">
+      <div className="md:flex md:justify-between md:items-center mb-6 dashboard-overview">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
           <p className="mt-1 text-sm text-gray-500">Your digital behavior analysis and insights for the past 7 days</p>
@@ -43,6 +44,8 @@ export default function Dashboard() {
             <Download className="-ml-1 mr-2 h-5 w-5 text-gray-400" />
             Export Data
           </Button>
+          
+          <TutorialButton />
         </div>
       </div>
 
@@ -80,7 +83,7 @@ export default function Dashboard() {
       </div>
 
       {/* Digital Footprint */}
-      <div className="mt-8">
+      <div className="mt-8 app-usage-section">
         <h2 className="text-lg font-medium text-gray-900">Digital Footprint Analyzer</h2>
         <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <TimeDistributionChart data={timeDistributionData} />
@@ -91,12 +94,14 @@ export default function Dashboard() {
       {/* Ad Prediction & Privacy Exposure */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <AdPredictionCard predictions={adPredictions} />
-        <PrivacyMeter score={privacyScore} appData={privacyData} />
+        <div className="privacy-meter">
+          <PrivacyMeter score={privacyScore} appData={privacyData} />
+        </div>
       </div>
 
       {/* Goals & Recommendations */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 goals-section">
           <GoalsList goals={goalsData} />
         </div>
         <RecommendationsList recommendations={recommendationsData} />

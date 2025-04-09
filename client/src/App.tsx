@@ -4,6 +4,8 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/hooks/use-auth";
+import { TutorialProvider } from "@/hooks/use-tutorial";
+import { TutorialWrapper } from "@/components/tutorial";
 import { ProtectedRoute } from "@/lib/protected-route";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
@@ -33,8 +35,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <TutorialProvider>
+          <Router />
+          <TutorialWrapper />
+          <Toaster />
+        </TutorialProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
