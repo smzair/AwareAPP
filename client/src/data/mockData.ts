@@ -10,6 +10,29 @@ import {
   DashboardStats 
 } from '@shared/schema';
 
+// Website usage data with visit statistics
+export interface WebsiteUsage {
+  id: number;
+  domain: string;
+  title: string;
+  category: string;
+  visitCount: number;
+  timeSpent: number; // in minutes
+  lastVisited: Date;
+  icon?: string;
+}
+
+// Categories breakdown
+export interface CategoryBreakdown {
+  id: number;
+  name: string;
+  percentage: number;
+  timeSpent: number; // in minutes
+  trend: 'up' | 'down' | 'stable';
+  trendPercentage: number;
+  color: string;
+}
+
 // App usage data
 export const appUsageData: AppUsage[] = [
   {
@@ -280,6 +303,148 @@ export const recommendationsData: Recommendation[] = [
 ];
 
 // Ad predictions
+// Website usage data
+export const websiteUsageData: WebsiteUsage[] = [
+  {
+    id: 1,
+    domain: 'youtube.com',
+    title: 'YouTube',
+    category: 'Entertainment',
+    visitCount: 45,
+    timeSpent: 120,
+    lastVisited: new Date('2023-06-01T18:45:00.000Z'),
+    icon: 'YouTube'
+  },
+  {
+    id: 2,
+    domain: 'linkedin.com',
+    title: 'LinkedIn',
+    category: 'Professional',
+    visitCount: 23,
+    timeSpent: 45,
+    lastVisited: new Date('2023-06-01T14:20:00.000Z'),
+    icon: 'Linkedin'
+  },
+  {
+    id: 3,
+    domain: 'github.com',
+    title: 'GitHub',
+    category: 'Development',
+    visitCount: 18,
+    timeSpent: 75,
+    lastVisited: new Date('2023-06-01T10:15:00.000Z'),
+    icon: 'Github'
+  },
+  {
+    id: 4,
+    domain: 'netflix.com',
+    title: 'Netflix',
+    category: 'Entertainment',
+    visitCount: 5,
+    timeSpent: 165,
+    lastVisited: new Date('2023-05-31T20:30:00.000Z'),
+    icon: 'Video'
+  },
+  {
+    id: 5,
+    domain: 'amazon.com',
+    title: 'Amazon',
+    category: 'Shopping',
+    visitCount: 12,
+    timeSpent: 35,
+    lastVisited: new Date('2023-06-01T12:10:00.000Z'),
+    icon: 'ShoppingCart'
+  },
+  {
+    id: 6,
+    domain: 'nytimes.com',
+    title: 'New York Times',
+    category: 'News',
+    visitCount: 8,
+    timeSpent: 28,
+    lastVisited: new Date('2023-06-01T07:45:00.000Z'),
+    icon: 'Newspaper'
+  },
+  {
+    id: 7,
+    domain: 'udemy.com',
+    title: 'Udemy',
+    category: 'Education',
+    visitCount: 3,
+    timeSpent: 90,
+    lastVisited: new Date('2023-05-31T15:20:00.000Z'),
+    icon: 'GraduationCap'
+  },
+  {
+    id: 8,
+    domain: 'facebook.com',
+    title: 'Facebook',
+    category: 'Social',
+    visitCount: 35,
+    timeSpent: 85,
+    lastVisited: new Date('2023-06-01T19:30:00.000Z'),
+    icon: 'Facebook'
+  }
+];
+
+// Category breakdown data
+export const categoryBreakdownData: CategoryBreakdown[] = [
+  {
+    id: 1,
+    name: 'Social',
+    percentage: 42,
+    timeSpent: 210,
+    trend: 'up',
+    trendPercentage: 8,
+    color: '#3b82f6' // blue-500
+  },
+  {
+    id: 2,
+    name: 'Entertainment',
+    percentage: 25,
+    timeSpent: 125,
+    trend: 'up',
+    trendPercentage: 12,
+    color: '#ec4899' // pink-500
+  },
+  {
+    id: 3,
+    name: 'Productivity',
+    percentage: 15,
+    timeSpent: 75,
+    trend: 'down',
+    trendPercentage: 5,
+    color: '#10b981' // emerald-500
+  },
+  {
+    id: 4,
+    name: 'News',
+    percentage: 8,
+    timeSpent: 40,
+    trend: 'stable',
+    trendPercentage: 0,
+    color: '#f59e0b' // amber-500
+  },
+  {
+    id: 5,
+    name: 'Shopping',
+    percentage: 6,
+    timeSpent: 30,
+    trend: 'down',
+    trendPercentage: 10,
+    color: '#6366f1' // indigo-500
+  },
+  {
+    id: 6,
+    name: 'Education',
+    percentage: 4,
+    timeSpent: 20,
+    trend: 'up',
+    trendPercentage: 15,
+    color: '#8b5cf6' // violet-500
+  }
+];
+
 export const adPredictions: AdPrediction[] = [
   {
     id: '1',
