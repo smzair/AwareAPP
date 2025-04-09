@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Goal } from '@shared/schema';
+import AddGoalDialog from './AddGoalDialog';
 import {
   Clock,
   AlertTriangle,
@@ -16,6 +17,7 @@ interface GoalsListProps {
 }
 
 export default function GoalsList({ goals }: GoalsListProps) {
+  const [addGoalOpen, setAddGoalOpen] = useState(false);
   const getGoalIcon = (category: string) => {
     switch (category.toLowerCase()) {
       case 'time':
@@ -61,8 +63,8 @@ export default function GoalsList({ goals }: GoalsListProps) {
     }
   };
   
-  const calculateProgress = (current: number | undefined, target: number) => {
-    if (current === undefined) return 0;
+  const calculateProgress = (current: number | null | undefined, target: number) => {
+    if (current === undefined || current === null) return 0;
     const percent = (current / target) * 100;
     // Cap at 100%
     return Math.min(percent, 100);
@@ -108,10 +110,14 @@ export default function GoalsList({ goals }: GoalsListProps) {
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-medium text-gray-900">Digital Behavior Goals</h3>
-          <Button size="sm">
+          <Button size="sm" onClick={() => setAddGoalOpen(true)}>
             <PlusCircle className="-ml-0.5 mr-2 h-4 w-4" />
             Add Goal
           </Button>
+          <AddGoalDialog 
+            open={addGoalOpen}
+            onClose={() => setAddGoalOpen(false)}
+          />
         </div>
         
         <div className="space-y-4">

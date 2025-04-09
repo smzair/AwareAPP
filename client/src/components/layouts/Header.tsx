@@ -3,6 +3,7 @@ import { Bell, Search, LogIn, LogOut } from 'lucide-react';
 import { userData } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
+import { useAuth } from '@/hooks/use-auth';
 
 type HeaderProps = {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,13 +11,12 @@ type HeaderProps = {
 
 export default function Header({ setSidebarOpen }: HeaderProps) {
   const [location, setLocation] = useLocation();
-  const isLoggedIn = true; // For demo purposes, assume the user is logged in
+  const { user, logout } = useAuth();
+  const isLoggedIn = !!user;
 
   const handleAuth = () => {
     if (isLoggedIn) {
-      // Simulate logout
-      // In a real app, we would call logout() from the auth context
-      setLocation('/auth');
+      logout();
     } else {
       setLocation('/auth');
     }
@@ -78,13 +78,26 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
 
           {/* User profile */}
           <div className="ml-3 relative">
-            <button type="button" className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none">
-              <img 
-                className="h-8 w-8 rounded-full object-cover" 
-                src={userData.avatar} 
-                alt="User profile" 
-              />
-            </button>
+            {isLoggedIn ? (
+              <div className="flex items-center">
+                <div className="mr-2 text-sm font-medium text-gray-700">
+                  {user.displayName || user.username}
+                </div>
+                <button type="button" className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none">
+                  <img 
+                    className="h-8 w-8 rounded-full object-cover" 
+                    src={user.avatar || userData.avatar} 
+                    alt="User profile" 
+                  />
+                </button>
+              </div>
+            ) : (
+              <button type="button" className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none">
+                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                  <LogIn className="h-4 w-4 text-gray-500" />
+                </div>
+              </button>
+            )}
           </div>
         </div>
       </div>

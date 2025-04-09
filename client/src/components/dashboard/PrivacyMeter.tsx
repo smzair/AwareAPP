@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { PrivacyScore, PrivacyData, AppPermission } from '@shared/schema';
 import { appPermissions } from '@/data/mockData';
+import PrivacyAuditDialog from './PrivacyAuditDialog';
 import { 
   MapPin,
   Mic,
@@ -20,6 +21,7 @@ interface PrivacyMeterProps {
 }
 
 export default function PrivacyMeter({ score, appData }: PrivacyMeterProps) {
+  const [privacyAuditOpen, setPrivacyAuditOpen] = useState(false);
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel.toLowerCase()) {
       case 'low':
@@ -151,22 +153,28 @@ export default function PrivacyMeter({ score, appData }: PrivacyMeterProps) {
                 </Button>
               </div>
               <div className="mt-2 grid grid-cols-4 gap-1">
-                {(app.permissions.items as string[]).map((permission, index) => (
-                  <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                    {getPermissionIcon(permission)}
-                    {appPermissions[permission]?.name || permission}
-                  </span>
-                ))}
+                {Array.isArray((app.permissions as any)?.items) && 
+                  (app.permissions as any).items.map((permission: string, index: number) => (
+                    <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                      {getPermissionIcon(permission)}
+                      {appPermissions[permission]?.name || permission}
+                    </span>
+                  ))
+                }
               </div>
             </div>
           ))}
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <Button className="w-full">
+          <Button className="w-full" onClick={() => setPrivacyAuditOpen(true)}>
             <ShieldCheck className="mr-2 h-5 w-5 text-gray-400" />
             Run Privacy Audit
           </Button>
+          <PrivacyAuditDialog 
+            open={privacyAuditOpen} 
+            onClose={() => setPrivacyAuditOpen(false)} 
+          />
         </div>
       </CardContent>
     </Card>
