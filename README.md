@@ -35,21 +35,10 @@ In the modern digital world, users leave behind a vast digital footprint — oft
 - Alerts for unusual or excessive behavior
 - Privacy tips (e.g., app permission reviews)
 
----
 
-## 🧪 Tech Stack
+### 💡 Platform Integration
+- Integrate the platform you want to track
+- Use MOBILE SCREEENTIME API IOS & Android 
 
-- **Frontend:** HTML/CSS/JS or no-code tools (e.g., Replit, Cursor)
-- **Backend (optional):** Node.js, Python Flask, or serverless functions
-- **AI/Logic:** Simulated using OpenAI/Claude API prompts or mock logic
-- **Data:** Simulated behavioral logs for demo purposes
 
----
 
-## 📦 Installation & Usage
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/aware-app.git
-cd aware-app
