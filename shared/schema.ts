@@ -1,7 +1,9 @@
 import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Define tables
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -52,6 +54,42 @@ export const recommendations = pgTable("recommendations", {
   status: text("status").notNull(), // 'new', 'read', 'dismissed', 'acted_upon'
   createdAt: timestamp("created_at").notNull(),
 });
+
+// Define relations
+export const usersRelations = relations(users, ({ many }) => ({
+  appUsage: many(appUsage),
+  privacyData: many(privacyData),
+  goals: many(goals),
+  recommendations: many(recommendations),
+}));
+
+export const appUsageRelations = relations(appUsage, ({ one }) => ({
+  user: one(users, {
+    fields: [appUsage.userId],
+    references: [users.id],
+  }),
+}));
+
+export const privacyDataRelations = relations(privacyData, ({ one }) => ({
+  user: one(users, {
+    fields: [privacyData.userId],
+    references: [users.id],
+  }),
+}));
+
+export const goalsRelations = relations(goals, ({ one }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id],
+  }),
+}));
+
+export const recommendationsRelations = relations(recommendations, ({ one }) => ({
+  user: one(users, {
+    fields: [recommendations.userId],
+    references: [users.id],
+  }),
+}));
 
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
