@@ -49,110 +49,56 @@ export function TutorialTooltip() {
         return;
       }
 
-      // Check if element is in viewport
-      const rect = targetEl.getBoundingClientRect();
-      const isInViewport = 
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= window.innerHeight &&
-        rect.right <= window.innerWidth;
-        
-      // If not in viewport, scroll it into view before positioning the tooltip
-      if (!isInViewport) {
-        targetEl.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center',
-          inline: 'center'
-        });
-        
-        // Add a brief delay to allow scrolling to complete before measuring
-        setTimeout(calculatePosition, 500);
-        return;
-      }
+      // Much simpler approach - always position relative to viewport
+      // First ensure element is in viewport
+      targetEl.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
       
-      // Now get updated position after any scrolling
-      const updatedRect = targetEl.getBoundingClientRect();
+      // Get element position after scrolling
+      const rect = targetEl.getBoundingClientRect();
+      
+      // Fixed dimensions
       const tooltipWidth = 300;
-      const tooltipHeight = 300; // Increased for safety - actual height will vary based on content
+      const tooltipHeight = 280; // Actual modal height approximation 
       const margin = 15;
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
-
+      
+      // Determine base position in viewport - always centered horizontally
       let newPosition: TooltipPosition = {};
-
-      // First determine the ideal position based on the requested placement
-      switch (currentStep.position) {
-        case 'top':
-          newPosition = {
-            left: updatedRect.left + updatedRect.width / 2,
-            bottom: viewportHeight - updatedRect.top + margin,
-            x: -tooltipWidth / 2
-          };
-          break;
-        case 'right':
-          newPosition = {
-            left: updatedRect.right + margin,
-            top: updatedRect.top + updatedRect.height / 2,
-            y: -tooltipHeight / 2
-          };
-          break;
-        case 'bottom':
-          newPosition = {
-            left: updatedRect.left + updatedRect.width / 2,
-            top: updatedRect.bottom + margin,
-            x: -tooltipWidth / 2
-          };
-          break;
-        case 'left':
-          newPosition = {
-            right: viewportWidth - updatedRect.left + margin,
-            top: updatedRect.top + updatedRect.height / 2,
-            y: -tooltipHeight / 2
-          };
-          break;
-      }
-
-      // Now check if tooltip would go off-screen and adjust if needed
       
-      // Check for bottom placement - if it would go off bottom of screen, place it above instead
-      if (currentStep.position === 'bottom' && updatedRect.bottom + margin + tooltipHeight > viewportHeight) {
-        newPosition = {
-          left: updatedRect.left + updatedRect.width / 2,
-          bottom: viewportHeight - updatedRect.top + margin,
-          x: -tooltipWidth / 2
-        };
+      // Simple viewport-based positioning that doesn't rely on complex calculations
+      // Always position the tooltip in the center top of the viewport with fixed offset from top
+      const TOP_OFFSET = 80; // Fixed distance from top of viewport
+      
+      newPosition = {
+        left: viewportWidth / 2,
+        top: TOP_OFFSET, 
+        x: -tooltipWidth / 2,
+        y: 0
+      };
+      
+      // Add indicator arrow pointing to target element
+      const highlightArrow = document.querySelector('.highlight-arrow');
+      if (highlightArrow) {
+        highlightArrow.remove();
       }
       
-      // Check for top placement - if it would go off top of screen, place it below instead
-      else if (currentStep.position === 'top' && updatedRect.top - tooltipHeight - margin < 0) {
-        newPosition = {
-          left: updatedRect.left + updatedRect.width / 2,
-          top: updatedRect.bottom + margin,
-          x: -tooltipWidth / 2
-        };
-      }
-
-      // Ensure left-right positioning doesn't go off screen
-      if ('left' in newPosition && newPosition.left !== undefined && newPosition.x !== undefined) {
-        try {
-          // Check if tooltip would go off left edge
-          const leftEdge = newPosition.left + (newPosition.x || 0);
-          if (leftEdge < 10) {
-            // Adjust x offset to keep tooltip on screen
-            newPosition.x = -newPosition.left + 10;
-          }
-          
-          // Check if tooltip would go off right edge
-          const rightEdge = newPosition.left + (newPosition.x || 0) + tooltipWidth;
-          if (rightEdge > viewportWidth - 10) {
-            // Adjust x offset to keep tooltip on screen
-            newPosition.x = viewportWidth - 10 - tooltipWidth - newPosition.left;
-          }
-        } catch (err) {
-          // Fallback if any calculations fail
-          console.error('Error calculating tooltip position', err);
-        }
-      }
+      // Create arrow element
+      const arrow = document.createElement('div');
+      arrow.classList.add('highlight-arrow', 'fixed', 'z-[9999]', 'border-l-8', 'border-r-8', 'border-t-8', 'border-transparent', 'border-t-primary', 'w-0', 'h-0');
+      
+      // Position arrow
+      const arrowTop = rect.top - 8;
+      const arrowLeft = rect.left + rect.width / 2 - 8;
+      
+      arrow.style.top = `${arrowTop}px`;
+      arrow.style.left = `${arrowLeft}px`;
+      
+      // Add to body
+      document.body.appendChild(arrow);
 
       setPosition(newPosition);
       setIsVisible(true);
@@ -173,6 +119,12 @@ export function TutorialTooltip() {
       window.removeEventListener('resize', calculatePosition);
       window.removeEventListener('scroll', calculatePosition);
       window.removeEventListener('orientationchange', calculatePosition);
+      
+      // Remove the arrow when component unmounts
+      const highlightArrow = document.querySelector('.highlight-arrow');
+      if (highlightArrow) {
+        highlightArrow.remove();
+      }
     };
   }, [isActive, currentStep]);
 

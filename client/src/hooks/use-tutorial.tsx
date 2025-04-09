@@ -116,12 +116,24 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
 
   // End the tutorial
   const endTutorial = () => {
+    // Clean up any arrows when ending tutorial
+    const highlightArrow = document.querySelector('.highlight-arrow');
+    if (highlightArrow) {
+      highlightArrow.remove();
+    }
+    
     setIsActive(false);
     setCurrentStepIndex(0);
   };
 
   // Navigate to the next step
   const nextStep = () => {
+    // Remove arrow when navigating
+    const highlightArrow = document.querySelector('.highlight-arrow');
+    if (highlightArrow) {
+      highlightArrow.remove();
+    }
+    
     if (currentStepIndex < steps.length - 1) {
       // Execute any action for the current step
       if (currentStep?.action) {
@@ -136,6 +148,12 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
 
   // Navigate to the previous step
   const prevStep = () => {
+    // Remove arrow when navigating
+    const highlightArrow = document.querySelector('.highlight-arrow');
+    if (highlightArrow) {
+      highlightArrow.remove();
+    }
+    
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
