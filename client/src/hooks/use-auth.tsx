@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 type User = {
   id: number;
@@ -20,105 +22,114 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is already logged in on component mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+  // Use React Query to fetch the current user
+  const { 
+    data: user, 
+    isLoading,
+    error 
+  } = useQuery({
+    queryKey: ['/api/user'],
+    queryFn: async () => {
       try {
-        setUser(JSON.parse(storedUser));
+        const response = await fetch('/api/user');
+        if (!response.ok) {
+          if (response.status === 401) {
+            return null;
+          }
+          throw new Error('Failed to fetch user');
+        }
+        return await response.json();
       } catch (error) {
-        console.error('Error parsing stored user', error);
+        console.error('Error fetching user:', error);
+        return null;
       }
-    }
-    setIsLoading(false);
-  }, []);
+    },
+  });
 
-  const login = async (username: string, password: string) => {
-    setIsLoading(true);
-    try {
-      // In a real app, this would be an API call
-      // Simulate API request delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simulated successful login
-      if (username && password) {
-        const newUser = {
-          id: 1,
-          username,
-          displayName: username.charAt(0).toUpperCase() + username.slice(1),
-          avatar: `https://ui-avatars.com/api/?name=${username}&background=random`
-        };
-        
-        setUser(newUser);
-        localStorage.setItem('user', JSON.stringify(newUser));
-        
-        toast({
-          title: "Login successful",
-          description: `Welcome back, ${newUser.displayName}!`,
-        });
-      } else {
-        throw new Error('Invalid credentials');
+  const loginMutation = useMutation({
+    mutationFn: async (credentials: { username: string; password: string }) => {
+      const response = await apiRequest('POST', '/api/login', credentials);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Login failed');
       }
-    } catch (error) {
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['/api/user'], data);
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${data.displayName || data.username}!`,
+      });
+    },
+    onError: (error: Error) => {
       toast({
         title: "Login failed",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: error.message,
         variant: "destructive",
       });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    },
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: async (userData: { username: string; displayName: string; password: string }) => {
+      const response = await apiRequest('POST', '/api/register', userData);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Registration failed');
+      }
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['/api/user'], data);
+      toast({
+        title: "Registration successful",
+        description: `Welcome, ${data.displayName || data.username}!`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Registration failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/logout');
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(['/api/user'], null);
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Logout failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const login = async (username: string, password: string) => {
+    return loginMutation.mutateAsync({ username, password });
   };
 
   const register = async (username: string, displayName: string, password: string) => {
-    setIsLoading(true);
-    try {
-      // In a real app, this would be an API call
-      // Simulate API request delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simulated successful registration
-      if (username && displayName && password) {
-        const newUser = {
-          id: 1,
-          username,
-          displayName,
-          avatar: `https://ui-avatars.com/api/?name=${displayName}&background=random`
-        };
-        
-        setUser(newUser);
-        localStorage.setItem('user', JSON.stringify(newUser));
-        
-        toast({
-          title: "Registration successful",
-          description: `Welcome, ${displayName}!`,
-        });
-      } else {
-        throw new Error('Invalid registration details');
-      }
-    } catch (error) {
-      toast({
-        title: "Registration failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    return registerMutation.mutateAsync({ username, displayName, password });
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
+    logoutMutation.mutate();
   };
 
   return (

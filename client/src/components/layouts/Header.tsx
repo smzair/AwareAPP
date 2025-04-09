@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Search, LogIn, LogOut } from 'lucide-react';
+import { Bell, Search, LogIn, LogOut, User } from 'lucide-react';
 import { userData } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
@@ -78,26 +78,26 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
 
           {/* User profile */}
           <div className="ml-3 relative">
-            {isLoggedIn ? (
+            {isLoggedIn && user ? (
               <div className="flex items-center">
                 <div className="mr-2 text-sm font-medium text-gray-700">
                   {user.displayName || user.username}
                 </div>
                 <button type="button" className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none">
-                  <img 
-                    className="h-8 w-8 rounded-full object-cover" 
-                    src={user.avatar || userData.avatar} 
-                    alt="User profile" 
-                  />
+                  {user.avatar ? (
+                    <img 
+                      className="h-8 w-8 rounded-full object-cover" 
+                      src={user.avatar} 
+                      alt={`${user.username}'s profile`} 
+                    />
+                  ) : (
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                  )}
                 </button>
               </div>
-            ) : (
-              <button type="button" className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none">
-                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                  <LogIn className="h-4 w-4 text-gray-500" />
-                </div>
-              </button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

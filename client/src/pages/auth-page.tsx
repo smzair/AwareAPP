@@ -33,6 +33,14 @@ export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>('login');
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { user, isLoading, login, register } = useAuth();
+  
+  // Redirect to dashboard if already logged in
+  React.useEffect(() => {
+    if (user && !isLoading) {
+      setLocation('/');
+    }
+  }, [user, isLoading, setLocation]);
 
   // Login form
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -54,33 +62,24 @@ export default function AuthPage() {
     },
   });
 
-  // For demo/testing purposes - we're not implementing real auth in this prototype
-  // but would use the auth hooks in a real application
-
-  const onLoginSubmit = (values: z.infer<typeof loginSchema>) => {
-    // For demo purposes, simulate a successful login
-    toast({
-      title: "Login successful",
-      description: `Welcome back, ${values.username}!`,
-    });
-    
-    // Redirect to dashboard
-    setTimeout(() => {
-      setLocation('/');
-    }, 1500);
+  const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      await login(values.username, values.password);
+      // The redirect will happen automatically thanks to the useEffect
+    } catch (error) {
+      console.error('Login error:', error);
+      // The error toast is already shown by the auth hook
+    }
   };
 
-  const onRegisterSubmit = (values: z.infer<typeof registerSchema>) => {
-    // For demo purposes, simulate a successful registration
-    toast({
-      title: "Registration successful",
-      description: `Welcome, ${values.displayName}!`,
-    });
-    
-    // Redirect to dashboard
-    setTimeout(() => {
-      setLocation('/');
-    }, 1500);
+  const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
+    try {
+      await register(values.username, values.displayName, values.password);
+      // The redirect will happen automatically thanks to the useEffect
+    } catch (error) {
+      console.error('Registration error:', error);
+      // The error toast is already shown by the auth hook
+    }
   };
 
   return (
