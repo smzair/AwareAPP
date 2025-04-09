@@ -8,10 +8,11 @@ import {
   ClipboardCheck, 
   Settings,
   HelpCircle,
-  Zap
+  Zap,
+  User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { userData } from '@/data/mockData';
+import { useAuth } from '@/hooks/use-auth';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: <BarChart3 className="h-6 w-6" /> },
@@ -29,6 +30,7 @@ type SidebarProps = {
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const [location] = useLocation();
+  const { user } = useAuth();
 
   return (
     <>
@@ -67,18 +69,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             </button>
           </div>
           <div className="px-4 mt-6">
-            <span className="flex items-center">
-              <img 
-                className="h-8 w-8 rounded-full object-cover" 
-                src={userData.avatar} 
-                alt="User profile"
-              />
-              <span className="ml-2 text-sm font-medium text-gray-700">
-                {userData.displayName}
-              </span>
-            </span>
+            {user && (
+              <div className="flex items-center text-gray-800">
+                <User className="h-5 w-5 text-primary mr-2" />
+                <span className="text-base font-bold">
+                  {user.displayName || user.username}
+                </span>
+              </div>
+            )}
             <span className="block mt-1 text-xs text-gray-500">
-              Last sync: {userData.lastSyncDate.toLocaleString('en-US', {
+              Last updated: {new Date().toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
                 hour: 'numeric',
